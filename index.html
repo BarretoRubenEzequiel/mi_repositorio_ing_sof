@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Git desde cero: lo básico</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <header class="portada">
+    <h1>Git desde cero</h1>
+    
+    <p>Qué es, cómo configurarlo y los comandos que vas a usar todos los días para guardar y compartir tu código.</p>
+  </header>
+
+  <div class="layout">
+    <nav class="indice" aria-label="Índice">
+      <a href="#que-es">Qué es Git</a>
+      <a href="#instalar">Instalar y crear tu usuario</a>
+      <a href="#repositorio">Crear un repositorio</a>
+      <a href="#estados">Los tres estados</a>
+      <a href="#commit">Tu primer commit</a>
+      <a href="#historial">Ver el historial</a>
+      <a href="#ramas">Ramas</a>
+      <a href="#remoto">GitHub y repos remotos</a>
+      <a href="#resumen">Resumen de comandos</a>
+    </nav>
+
+    <main>
+
+      <section id="que-es">
+        <h2>Qué es Git</h2>
+        <p>Git es un <strong>sistema de control de versiones</strong>: guarda el historial de cambios de tu proyecto para que puedas volver atrás, ver quién cambió qué y trabajar en equipo sin pisarte los archivos.</p>
+        <p>No hay que confundirlo con <strong>GitHub</strong>. Git es la herramienta que corre en tu compu; GitHub es un sitio web donde subís tus repositorios para respaldarlos y compartirlos (existen alternativas como GitLab o Bitbucket).</p>
+        <dl class="glosario">
+          <dt>Repositorio</dt><dd>La carpeta de tu proyecto junto con todo su historial de cambios.</dd>
+          <dt>Commit</dt><dd>Una "foto" del proyecto en un momento dado, con un mensaje que explica qué cambió.</dd>
+          <dt>Rama (branch)</dt><dd>Una línea de trabajo paralela, para probar cosas sin romper lo que ya funciona.</dd>
+          <dt>Remoto</dt><dd>Una copia del repositorio alojada en otro lugar, por ejemplo GitHub.</dd>
+        </dl>
+      </section>
+
+      <section id="instalar">
+        <h2>Instalar y crear tu usuario</h2>
+        <p>Descargá Git desde <a href="https://git-scm.com/downloads">git-scm.com</a> e instalalo. Para comprobar que quedó bien, abrí una terminal (o Git Bash en Windows) y ejecutá:</p>
+        <pre><code>git --version</code></pre>
+        <p>Lo primero que tenés que hacer es decirle a Git quién sos. Ese nombre y ese email van a quedar registrados en cada commit que hagas:</p>
+        <pre><code>git config --global user.name "Tu Nombre"
+git config --global user.email "tuemail@ejemplo.com"</code></pre>
+        <p>Para revisar la configuración:</p>
+        <pre><code>git config --list</code></pre>
+        <p class="nota">Si vas a usar GitHub, creá también tu cuenta en <a href="https://github.com">github.com</a> y usá el mismo email que configuraste acá, así tus commits quedan asociados a tu perfil.</p>
+      </section>
+
+      <section id="repositorio">
+        <h2>Crear un repositorio</h2>
+        <p>Hay dos caminos: empezar uno nuevo o copiar uno que ya existe.</p>
+        <h3>Empezar uno nuevo</h3>
+        <p>Entrá a la carpeta de tu proyecto y ejecutá:</p>
+        <pre><code>mkdir mi-proyecto
+cd mi-proyecto
+git init</code></pre>
+        <p><code>git init</code> crea una carpeta oculta llamada <code>.git</code> donde Git guarda todo el historial. Nunca la borres ni la edites a mano.</p>
+        <h3>Copiar uno existente</h3>
+        <pre><code>git clone https://github.com/usuario/repositorio.git</code></pre>
+      </section>
+
+      <section id="estados">
+        <h2>Los tres estados</h2>
+        <p>Antes de guardar un cambio, pasa por tres lugares. Entender esto resuelve la mitad de las dudas con Git.</p>
+        <div class="flujo">
+          <div class="etapa"><strong>Directorio de trabajo</strong><span>Tus archivos, con los cambios que hiciste.</span></div>
+          <div class="flecha" aria-hidden="true">git add</div>
+          <div class="etapa"><strong>Staging (área de preparación)</strong><span>Los cambios que elegiste para el próximo commit.</span></div>
+          <div class="flecha" aria-hidden="true">git commit</div>
+          <div class="etapa"><strong>Repositorio</strong><span>Los cambios ya guardados en el historial.</span></div>
+        </div>
+      </section>
+
+      <section id="commit">
+        <h2>Tu primer commit</h2>
+        <p>Creá un archivo cualquiera y seguí estos pasos:</p>
+        <pre><code>echo "# Mi proyecto" &gt; README.md
+
+git status            # qué cambió y qué está sin seguimiento
+git add README.md     # lo pasa al staging
+git commit -m "Agrego el README"</code></pre>
+        <p>Para agregar todos los cambios juntos usá <code>git add .</code>. Escribí mensajes cortos que expliquen <em>qué</em> hiciste, por ejemplo "Corrijo el login" y no "cambios".</p>
+        <h3>Ignorar archivos</h3>
+        <p>Si hay archivos que no querés versionar (contraseñas, carpetas de dependencias como <code>node_modules</code>), creá un archivo <code>.gitignore</code> y listalos ahí, uno por línea.</p>
+      </section>
+
+      <section id="historial">
+        <h2>Ver el historial</h2>
+        <pre><code>git log                 # historial completo
+git log --oneline       # una línea por commit
+git diff                # cambios que todavía no agregaste
+git restore archivo.txt # descarta los cambios de un archivo</code></pre>
+        <p class="nota"><code>git restore</code> borra los cambios sin guardar de ese archivo y no se pueden recuperar. Usalo con cuidado.</p>
+      </section>
+
+      <section id="ramas">
+        <h2>Ramas</h2>
+        <p>La rama principal se suele llamar <code>main</code>. Para trabajar en algo nuevo sin tocarla, creás otra rama:</p>
+        <pre><code>git branch                  # lista las ramas
+git switch -c nueva-funcion # crea una rama y te mueve a ella
+git switch main             # volvés a main
+git merge nueva-funcion     # unís la rama nueva a main</code></pre>
+        <p>Si dos ramas cambiaron la misma parte de un archivo, Git te avisa con un <strong>conflicto</strong>. Abrí el archivo, elegí qué versión queda, hacé <code>git add</code> y terminá con un <code>git commit</code>.</p>
+      </section>
+
+      <section id="remoto">
+        <h2>GitHub y repos remotos</h2>
+        <p>Para subir tu proyecto, primero creá un repositorio vacío en GitHub (botón <em>New</em>) y después conectalo con el tuyo local:</p>
+        <pre><code>git remote add origin https://github.com/usuario/repositorio.git
+git branch -M main
+git push -u origin main</code></pre>
+        <p>Desde ese momento, el ciclo de trabajo es este:</p>
+        <pre><code>git pull      # traés los cambios que hay en el remoto
+# ...trabajás, git add, git commit...
+git push      # subís tus commits</code></pre>
+        <p class="nota">GitHub ya no acepta la contraseña de tu cuenta al hacer <code>push</code> por HTTPS: necesitás un <em>Personal Access Token</em> o una clave SSH. Se configuran desde los ajustes de tu cuenta.</p>
+      </section>
+
+      <section id="resumen">
+        <h2>Resumen de comandos</h2>
+        <table>
+          <thead><tr><th>Comando</th><th>Para qué sirve</th></tr></thead>
+          <tbody>
+            <tr><td><code>git init</code></td><td>Crea un repositorio nuevo</td></tr>
+            <tr><td><code>git clone URL</code></td><td>Copia un repositorio remoto</td></tr>
+            <tr><td><code>git status</code></td><td>Muestra el estado de los archivos</td></tr>
+            <tr><td><code>git add .</code></td><td>Prepara todos los cambios</td></tr>
+            <tr><td><code>git commit -m "msg"</code></td><td>Guarda los cambios preparados</td></tr>
+            <tr><td><code>git log --oneline</code></td><td>Lista los commits</td></tr>
+            <tr><td><code>git switch -c rama</code></td><td>Crea una rama y te pasa a ella</td></tr>
+            <tr><td><code>git merge rama</code></td><td>Une una rama a la actual</td></tr>
+            <tr><td><code>git pull</code></td><td>Trae cambios del remoto</td></tr>
+            <tr><td><code>git push</code></td><td>Sube tus commits al remoto</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>Guía básica de Git · Material de estudio</footer>
+
+</body>
+</html>
